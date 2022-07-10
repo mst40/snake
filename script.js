@@ -2,10 +2,15 @@
 
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
+
 //マスの数
 const grid = 20;
+//マスの大きさ(px)
 const stage = canvas.width / grid;
+//intervalIDを格納
+let intervId;
 
+//アイテム
 const item = {
     x: null,
     y: null,
@@ -15,12 +20,17 @@ const item = {
         ctx.fillRect(this.x*grid, this.y* grid, grid, grid)
     }
 };
+
+//スネーク
 const snake = {
+    //スネークの座標
+    //max　grid
     x: null,
     y: null,
     //スネークのベクトル
     dx: 1,
     dy: 0,
+    //スネークの長さ
     tail: null,
 
     update: function() {
@@ -36,6 +46,15 @@ const snake = {
         if(this.body.length > this.tail) this.body.shift();
     }
 };
+
+//スタート
+function start(e) {
+    if(e.key === ' '){
+        init();
+        intervId = setInterval(loop,1000/5);
+    }
+}
+
 //初期化
 const init = () => {
     //スネークの初期位置
@@ -43,76 +62,80 @@ const init = () => {
     snake.y = stage / 2;
     //スネークの初期の長さ
     snake.tail = 4;
-    //スネークの体の座標を保持
+    //スネークの体の各座標を保持
     snake.body = []
 
     item.x = Math.floor(Math.random() * stage);
     item.y = Math.floor(Math.random() * stage);
 };
+
 //ループ
 const loop = () => {
+    document.removeEventListener('keydown', start);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     snake.update();
     item.update();
+ //衝突
+    if(collision()){
+        pause();
+    }   
 
+ //りんごを食べて長くなる
     if(snake.x === item.x && snake.y === item.y){
         snake.tail++;
         item.x = Math.floor(Math.random() * stage);
         item.y = Math.floor(Math.random() * stage);
     }
-    if(collision()){
-        pause();
-    }
+
 };
+
 //衝突の検知
 function collision(){
-    if(snake.x < 0 || snake.x > stage){
+    if(snake.x < -1 || snake.x > stage){
         return true;
     }
-    if(snake.y < 0 || snake.y > stage){
+    if(snake.y < -1|| snake.y > stage){
         return true;
     }
     return false;
 }
+
 //一時停止
 function pause(){
-    ctx.save();
+    clearInterval(intervId);
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "#cccccc";
-    ctx.textAlign = "center"
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.textAlign = "center";
     ctx.font = "50px Lucida Console";
     ctx.fillStyle = "black";
     ctx.fillText("GAME OVER", canvas.width/2, canvas.height/2);
     ctx.font = "15px Arial";
     ctx.fillText("press \"SPACE\" to restart", canvas.width/2, canvas.height/2+100);
-    ctx.restore();
 
+    document.addEventListener('keydown', start);
 }
-//スタート
-document.addEventListener('keydown', e => {
-    if(e.key === ' '){
-        init();
-        setInterval(loop,1000/15);
-    }
-    console.log(snake)
-})
-document.addEventListener('keydown', e => {
-    switch(e.key) {
-        case 'ArrowLeft':
+
+ //操作
+    document.addEventListener('keydown', e => {
+        if(e.key === 'ArrowLeft' && snake.dx === 0) {
             snake.dx = -1;
             snake.dy = 0;
-            break;
-        case 'ArrowRight':
+        }
+        else if(e.key === 'ArrowRight' && snake.dx === 0) {
             snake.dx = +1;
             snake.dy = 0;
-            break;
-        case 'ArrowUp':
+        }
+        else if(e.key === 'ArrowUp' && snake.dy === 0) {
             snake.dx = 0;
             snake.dy = -1;
-            break;
-        case 'ArrowDown':
+        }
+        else if(e.key === 'ArrowDown' && snake.dy === 0) {
             snake.dx = 0;
             snake.dy = +1;
-            break;
-    }
-});
+        }
+    });
+
+//スタート
+document.addEventListener('keydown', start)
