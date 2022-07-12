@@ -2,12 +2,12 @@
 
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
-
+//スタート画面
 ctx.textAlign = "center";
 ctx.font = "50px Lucida Console";
 ctx.fillStyle = "#2f4f4f";
-ctx.fillText("GAME START", canvas.width/2, canvas.height/2);
-ctx.font = "15px Arial";
+ctx.fillText("START", canvas.width/2, canvas.height/2);
+ctx.font = "20px Arial";
 ctx.fillText("press \"SPACE\" key", canvas.width/2, canvas.height/2+50);
 
 
@@ -79,7 +79,7 @@ const init = () => {
 
 //ループ
 const loop = () => {
-    document.removeEventListener('keydown', start);
+    document.removeEventListener('keyup', start);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     snake.update();
     item.update();
@@ -105,10 +105,10 @@ function getRandomInt(min, max) {
 
 //当たり判定
 function collision(){
-    if(snake.x < 0 || snake.x > stage){
+    if(snake.x < 0 || snake.x > stage-1){
         return true;
     }
-    if(snake.y < 0 || snake.y > stage){
+    if(snake.y < 0 || snake.y > stage-1){
         return true;
     }
     return false;
@@ -122,8 +122,10 @@ function pause(){
     ctx.font = "50px Lucida Console";
     ctx.fillStyle = "#8b4513";
     ctx.fillText("GAME OVER", canvas.width/2, canvas.height/2);
-    ctx.font = "15px Arial";
-    ctx.fillText("press \"SPACE\" key to restart", canvas.width/2, canvas.height/2+50);
+    ctx.font = "18px Arial";
+    ctx.fillText(`score: ${snake.body.length-4}`, canvas.width/2, canvas.height/2+25);
+    ctx.fillStyle = "#2f4f4f";
+    ctx.fillText("press \"SPACE\" key to restart", canvas.width/2, canvas.height/2+75);
 
     document.addEventListener('keydown', start);
 }
@@ -149,4 +151,4 @@ function pause(){
     });
 
 //スタート
-document.addEventListener('keydown', start)
+document.addEventListener('keyup', start)
