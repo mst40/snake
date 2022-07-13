@@ -1,3 +1,3 @@
 # snake
 Simple snake game.
-You can paly the game at https://shi0m.github.io/snake/.
+You can paly the game at https://mst40.github.io/snake/.
