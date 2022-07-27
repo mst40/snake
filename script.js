@@ -125,11 +125,11 @@ function pause(){
     ctx.fillStyle = "#2f4f4f";
     ctx.fillText("press \"SPACE\" key to restart", canvas.width/2, canvas.height/2+75);
 
-    document.addEventListener('keydown', start);
+    document.addEventListener('keyup', start);
 }
 
  //操作
-    document.addEventListener('keydown', e => {
+    document.addEventListener('keyup', e => {
         if(e.key === 'ArrowLeft' && snake.dx === 0) {
             snake.dx = -1;
             snake.dy = 0;
