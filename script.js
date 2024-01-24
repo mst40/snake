@@ -10,9 +10,9 @@ ctx.fillText("press \"SPACE\" key", canvas.width / 2, canvas.height / 2 + 50);
 
 
 //マスの大きさ
-const grid = 40;
+const grid = 25;
 //マスの数
-//400/40 = 10
+//400/25 = 16
 const stage = canvas.width / grid;
 //intervalIDを格納
 let intervId;
